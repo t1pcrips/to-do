@@ -25,6 +25,7 @@ type WriterMessage struct {
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Hello task")
 
+	w.WriteHeader(200)
 	fmt.Fprintf(w, "Hello, %s", task)
 }
 
