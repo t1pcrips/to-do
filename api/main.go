@@ -18,10 +18,6 @@ type requestBody struct {
 	Message string `json:"message"`
 }
 
-type WriterMessage struct {
-	Message string
-}
-
 func HelloHandler(w http.ResponseWriter, r *http.Request) {
 	log.Println("Hello task")
 
@@ -36,8 +32,7 @@ func CreateNewTask(w http.ResponseWriter, r *http.Request) {
 	task = rb.Message
 
 	w.WriteHeader(200)
-	msg := WriterMessage{Message: "new task created"}
-	fmt.Fprint(w, msg.Message)
+	fmt.Fprint(w, "new task created")
 }
 
 func main() {
