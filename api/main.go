@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/gorilla/mux"
 	"log"
 	"net/http"
@@ -10,37 +9,60 @@ import (
 
 var (
 	port = "8080"
-	task string
-	rb   requestBody
 )
 
-type requestBody struct {
-	Message string `json:"message"`
+func GetMessages(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	log.Println("Getting messages handler...")
+
+	var messages []Message
+	result := db.Find(&messages)
+
+	if result.Error != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println("failed to find messages: ", result.Error)
+		w.Write([]byte("failed to find messages"))
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(messages)
+
+	log.Println("Messages received")
 }
 
-func HelloHandler(w http.ResponseWriter, r *http.Request) {
-	log.Println("Hello task")
+func CreateMessage(w http.ResponseWriter, r *http.Request) {
+	log.Println("Creating new message handler...")
 
-	w.WriteHeader(200)
-	fmt.Fprintf(w, "Hello, %s", task)
-}
+	newEntry := &Message{}
+	json.NewDecoder(r.Body).Decode(newEntry)
 
-func CreateNewTask(w http.ResponseWriter, r *http.Request) {
-	log.Println("New task create")
+	result := db.Create(newEntry)
+	if result.Error != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		log.Println("failed to created message: ", result.Error)
+		w.Write([]byte("failed to created message"))
+		return
+	}
 
-	json.NewDecoder(r.Body).Decode(&rb)
-	task = rb.Message
-
-	w.WriteHeader(200)
-	fmt.Fprint(w, "new task created")
+	w.WriteHeader(http.StatusCreated)
+	log.Println("New message created")
 }
 
 func main() {
+
+	InitDB()
+
+	err := db.AutoMigrate(Message{})
+	if err != nil {
+		log.Fatal("failed to migrate database")
+	}
+
 	router := mux.NewRouter()
 
-	router.HandleFunc("/api/hello", HelloHandler).Methods("GET")
-	router.HandleFunc("/api/task", CreateNewTask).Methods("POST")
+	router.HandleFunc("/api/messages", GetMessages).Methods("GET")
+	router.HandleFunc("/api/messages", CreateMessage).Methods("POST")
 
-	log.Println("Server starts")
+	log.Println("Server starts...")
 	log.Fatal(http.ListenAndServe(":"+port, router))
 }
