@@ -56,7 +56,14 @@ func DeleteMessage(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	result := db.Table("messages").Delete(&Message{}, uint(id))
+	result := db.Table("messages").First(&Message{}, uint(id))
+	if result.Error != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(result.Error.Error())
+		return
+	}
+
+	result = db.Table("messages").Delete(&Message{}, uint(id))
 	if result.Error != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		json.NewEncoder(w).Encode(result.Error.Error())
