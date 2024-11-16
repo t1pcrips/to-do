@@ -18,7 +18,7 @@ func NewTaskHandler(service *service.TaskService) *TaskHandler {
 	}
 }
 
-func (handler *TaskHandler) Create() http.HandlerFunc {
+func (handler *TaskHandler) CreateTask() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		task, err := req.HandleBody[service.Task](w, r)
 		if err != nil {
@@ -34,7 +34,7 @@ func (handler *TaskHandler) Create() http.HandlerFunc {
 	}
 }
 
-func (handler *TaskHandler) GetAll() http.HandlerFunc {
+func (handler *TaskHandler) GetAllTasks() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		tasks, err := handler.Service.GetAllTask()
 		if err != nil {
@@ -45,7 +45,7 @@ func (handler *TaskHandler) GetAll() http.HandlerFunc {
 	}
 }
 
-func (handler *TaskHandler) Update() http.HandlerFunc {
+func (handler *TaskHandler) UpdateTask() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		task, err := req.HandleBody[service.Task](w, r)
 		if err != nil {
@@ -62,7 +62,7 @@ func (handler *TaskHandler) Update() http.HandlerFunc {
 	}
 }
 
-func (handler *TaskHandler) Delete() http.HandlerFunc {
+func (handler *TaskHandler) DeleteTask() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		idString := mux.Vars(r)["id"]
 		err := handler.Service.DeleteTask(idString)

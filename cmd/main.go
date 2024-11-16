@@ -27,10 +27,10 @@ func main() {
 		Handler: router,
 	}
 
-	router.HandleFunc("/task", handler.Create()).Methods("POST")
-	router.HandleFunc("/task/{id}", handler.Update()).Methods("PATCH")
-	router.HandleFunc("/task/{id}", handler.Delete()).Methods("DELETE")
-	router.HandleFunc("/tasks", handler.GetAll()).Methods("GET")
+	router.HandleFunc("/task", handler.CreateTask()).Methods("POST")
+	router.HandleFunc("/task/{id}", handler.UpdateTask()).Methods("PATCH")
+	router.HandleFunc("/task/{id}", handler.DeleteTask()).Methods("DELETE")
+	router.HandleFunc("/tasks", handler.GetAllTasks()).Methods("GET")
 
 	log.Println("Server starts...")
 	log.Fatal(server.ListenAndServe())
