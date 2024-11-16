@@ -14,11 +14,11 @@ func NewTaskService(repo *TaskRepository) *TaskService {
 }
 
 func (s *TaskService) GetAllTask() ([]Task, error) {
-	return s.Repository.GetAll()
+	return s.Repository.GetAllTasks()
 }
 
 func (s *TaskService) CreateTask(task *Task) (*Task, error) {
-	return s.Repository.Create(task)
+	return s.Repository.CreateTask(task)
 }
 
 func (s *TaskService) DeleteTask(idString string) error {
@@ -27,11 +27,11 @@ func (s *TaskService) DeleteTask(idString string) error {
 		return err
 	}
 	uintID := uint(id)
-	_, err = s.Repository.FindById(uintID)
+	_, err = s.Repository.FindByIdTask(uintID)
 	if err != nil {
 		return err
 	}
-	return s.Repository.Delete(uintID)
+	return s.Repository.DeleteTask(uintID)
 }
 
 func (s *TaskService) UpdateTask(idString string, task *Task) (*Task, error) {
@@ -40,7 +40,7 @@ func (s *TaskService) UpdateTask(idString string, task *Task) (*Task, error) {
 		return nil, err
 	}
 	uintID := uint(id)
-	_, err = s.Repository.FindById(uintID)
+	_, err = s.Repository.FindByIdTask(uintID)
 	if err != nil {
 		return nil, err
 	}
@@ -51,5 +51,5 @@ func (s *TaskService) UpdateTask(idString string, task *Task) (*Task, error) {
 			ID: uintID,
 		},
 	}
-	return s.Repository.Update(newTask)
+	return s.Repository.UpdateTask(newTask)
 }

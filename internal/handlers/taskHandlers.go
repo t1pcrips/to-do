@@ -18,58 +18,52 @@ func NewTaskHandler(service *service.TaskService) *TaskHandler {
 	}
 }
 
-func (handler *TaskHandler) CreateTask() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		task, err := req.HandleBody[service.Task](w, r)
-		if err != nil {
-			resp.Json(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		task, err = handler.Service.CreateTask(task)
-		if err != nil {
-			resp.Json(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		resp.Json(w, task, http.StatusCreated)
+func (handler *TaskHandler) CreateTask(w http.ResponseWriter, r *http.Request) {
+	task, err := req.HandleBody[service.Task](w, r)
+	if err != nil {
+		resp.Json(w, err.Error(), http.StatusBadRequest)
+		return
 	}
+	task, err = handler.Service.CreateTask(task)
+	if err != nil {
+		resp.Json(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	resp.Json(w, task, http.StatusCreated)
 }
 
-func (handler *TaskHandler) GetAllTasks() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		tasks, err := handler.Service.GetAllTask()
-		if err != nil {
-			resp.Json(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		resp.Json(w, tasks, http.StatusCreated)
+func (handler *TaskHandler) GetAllTasks(w http.ResponseWriter, r *http.Request) {
+	tasks, err := handler.Service.GetAllTask()
+	if err != nil {
+		resp.Json(w, err.Error(), http.StatusBadRequest)
+		return
 	}
+	resp.Json(w, tasks, http.StatusCreated)
 }
 
-func (handler *TaskHandler) UpdateTask() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		task, err := req.HandleBody[service.Task](w, r)
-		if err != nil {
-			resp.Json(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		idString := mux.Vars(r)["id"]
-		task, err = handler.Service.UpdateTask(idString, task)
-		if err != nil {
-			resp.Json(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		resp.Json(w, task, http.StatusCreated)
+func (handler *TaskHandler) UpdateTask(w http.ResponseWriter, r *http.Request) {
+
+	task, err := req.HandleBody[service.Task](w, r)
+	if err != nil {
+		resp.Json(w, err.Error(), http.StatusBadRequest)
+		return
 	}
+	idString := mux.Vars(r)["id"]
+	task, err = handler.Service.UpdateTask(idString, task)
+	if err != nil {
+		resp.Json(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	resp.Json(w, task, http.StatusCreated)
+
 }
 
-func (handler *TaskHandler) DeleteTask() http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		idString := mux.Vars(r)["id"]
-		err := handler.Service.DeleteTask(idString)
-		if err != nil {
-			resp.Json(w, err.Error(), http.StatusBadRequest)
-			return
-		}
-		resp.Json(w, nil, http.StatusCreated)
+func (handler *TaskHandler) DeleteTask(w http.ResponseWriter, r *http.Request) {
+	idString := mux.Vars(r)["id"]
+	err := handler.Service.DeleteTask(idString)
+	if err != nil {
+		resp.Json(w, err.Error(), http.StatusBadRequest)
+		return
 	}
+	resp.Json(w, nil, http.StatusCreated)
 }
