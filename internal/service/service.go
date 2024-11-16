@@ -21,7 +21,7 @@ func (s *TaskService) CreateTask(task *Task) (*Task, error) {
 	return s.Repository.CreateTask(task)
 }
 
-func (s *TaskService) DeleteTask(idString string) error {
+func (s *TaskService) DeleteTaskById(idString string) error {
 	id, err := strconv.ParseUint(idString, 10, 64)
 	if err != nil {
 		return err
@@ -34,7 +34,7 @@ func (s *TaskService) DeleteTask(idString string) error {
 	return s.Repository.DeleteTask(uintID)
 }
 
-func (s *TaskService) UpdateTask(idString string, task *Task) (*Task, error) {
+func (s *TaskService) UpdateTaskById(idString string, task *Task) (*Task, error) {
 	id, err := strconv.ParseUint(idString, 10, 64)
 	if err != nil {
 		return nil, err

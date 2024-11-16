@@ -41,7 +41,7 @@ func (handler *TaskHandler) GetAllTasks(w http.ResponseWriter, r *http.Request) 
 	resp.Json(w, tasks, http.StatusCreated)
 }
 
-func (handler *TaskHandler) UpdateTask(w http.ResponseWriter, r *http.Request) {
+func (handler *TaskHandler) UpdateTaskById(w http.ResponseWriter, r *http.Request) {
 
 	task, err := req.HandleBody[service.Task](w, r)
 	if err != nil {
@@ -49,7 +49,7 @@ func (handler *TaskHandler) UpdateTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	idString := mux.Vars(r)["id"]
-	task, err = handler.Service.UpdateTask(idString, task)
+	task, err = handler.Service.UpdateTaskById(idString, task)
 	if err != nil {
 		resp.Json(w, err.Error(), http.StatusBadRequest)
 		return
@@ -58,9 +58,9 @@ func (handler *TaskHandler) UpdateTask(w http.ResponseWriter, r *http.Request) {
 
 }
 
-func (handler *TaskHandler) DeleteTask(w http.ResponseWriter, r *http.Request) {
+func (handler *TaskHandler) DeleteTaskById(w http.ResponseWriter, r *http.Request) {
 	idString := mux.Vars(r)["id"]
-	err := handler.Service.DeleteTask(idString)
+	err := handler.Service.DeleteTaskById(idString)
 	if err != nil {
 		resp.Json(w, err.Error(), http.StatusBadRequest)
 		return
