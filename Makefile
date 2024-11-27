@@ -8,7 +8,7 @@ get-deps:
 	go get -u github.com/golang-migrate/migrate/v4
 
 migrate-new:
-	migrate create -ext sql -dir ./migrations ${NAME}
+	migrate create -ext sql -dir ./migrations
 
 migrate-up:
 	$(MIGRATE) up
@@ -16,5 +16,7 @@ migrate-up:
 migrate-down:
 	$(MIGRATE) down
 
+gen-openapi:
+	oapi-codegen -config openapi/.openapi -include-tags tasks -package tasks openapi/openapi.yaml > ./internal/web/tasks/api.gen.go
 run-server:
 	go run cmd/main.go

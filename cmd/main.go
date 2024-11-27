@@ -1,37 +1,34 @@
 package main
 
 import (
-	"github.com/gorilla/mux"
+	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"log"
-	"net/http"
 	"todo/configs"
 	"todo/internal/database"
 	"todo/internal/handlers"
 	"todo/internal/service"
+	"todo/internal/web/tasks"
 )
 
 func main() {
 	conf := configs.LoadConfig()
 
 	db := database.NewDB(conf)
-	db.AutoMigrate(&service.Task{})
 
 	repo := service.NewTaskRepository(db)
 	serv := service.NewTaskService(repo)
 
 	handler := handlers.NewTaskHandler(serv)
 
-	router := mux.NewRouter()
-	server := http.Server{
-		Addr:    conf.Path.Port,
-		Handler: router,
-	}
+	e := echo.New()
 
-	router.HandleFunc("/task", handler.CreateTask).Methods("POST")
-	router.HandleFunc("/task/{id}", handler.UpdateTaskById).Methods("PATCH")
-	router.HandleFunc("/task/{id}", handler.DeleteTaskById).Methods("DELETE")
-	router.HandleFunc("/tasks", handler.GetAllTasks).Methods("GET")
+	e.Use(middleware.Logger())
+	e.Use(middleware.Recover())
 
-	log.Println("Server starts...")
-	log.Fatal(server.ListenAndServe())
+	strictHandler := tasks.NewStrictHandler(handler, nil)
+	tasks.RegisterHandlers(e, strictHandler)
+
+	log.Fatal(e.Start(conf.Path.Port))
+
 }

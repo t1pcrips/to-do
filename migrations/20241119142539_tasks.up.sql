@@ -1,6 +1,6 @@
 create table tasks (
     id serial primary key,
-    text VARCHAR(255) not null,
+    title VARCHAR(255) not null,
     is_done boolean default false,
     created_at timestamp not null default now(),
     updated_at timestamp not null default now(),
