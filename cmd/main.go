@@ -7,7 +7,7 @@ import (
 	"todo/configs"
 	"todo/internal/database"
 	"todo/internal/handlers"
-	"todo/internal/service"
+	"todo/internal/service/task"
 	"todo/internal/web/tasks"
 )
 
@@ -16,8 +16,8 @@ func main() {
 
 	db := database.NewDB(conf)
 
-	repo := service.NewTaskRepository(db)
-	serv := service.NewTaskService(repo)
+	repo := task.NewTaskRepository(db)
+	serv := task.NewTaskService(repo)
 
 	handler := handlers.NewTaskHandler(serv)
 

@@ -2,15 +2,15 @@ package handlers
 
 import (
 	"context"
-	"todo/internal/service"
+	"todo/internal/service/task"
 	"todo/internal/web/tasks"
 )
 
 type TaskHandler struct {
-	Service *service.TaskService
+	Service *task.TaskService
 }
 
-func NewTaskHandler(service *service.TaskService) *TaskHandler {
+func NewTaskHandler(service *task.TaskService) *TaskHandler {
 	return &TaskHandler{
 		Service: service,
 	}

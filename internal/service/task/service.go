@@ -1,4 +1,4 @@
-package service
+package task
 
 import (
 	"todo/internal/web/tasks"

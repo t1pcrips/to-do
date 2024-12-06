@@ -1,21 +1,25 @@
-DB_DNS := "postgres://postgres:goland@localhost:5433/tasks?sslmode=disable"
-MIGRATE := migrate -path ./migrations -database $(DB_DNS)
+LOCAL_BIN := $(CURDIR)/bin
+LOCAL_MIGRATION_DIR := $(CURDIR)/migrations
 
 install-deps:
-	go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+	GOBIN=$(LOCAL_BIN) go install -tags 'postgres' github.com/golang-migrate/migrate/v4/cmd/migrate@latest
+	GOBIN=$(LOCAL_BIN) go install github.com/pressly/goose/v3/cmd/goose@latest
 
 get-deps:
 	go get -u github.com/golang-migrate/migrate/v4
 
 migrate-new:
-	migrate create -ext sql -dir ./migrations
+	mkdir -p migrations
+	$(LOCAL_BIN)/goose -dir $(LOCAL_MIGRATION_DIR) create ${NAME} sql
 
 migrate-up:
-	$(MIGRATE) up
+	$(LOCAL_BIN)/goose -dir $(LOCAL_MIGRATION_DIR) postgres $(LOCAL_MIGRATION_DSN) up -v
 
 migrate-down:
-	$(MIGRATE) down
+	$(LOCAL_BIN)/goose -dir $(LOCAL_MIGRATION_DIR) postgres $(LOCAL_MIGRATION_DSN) down -v
 
+migrate-reset:
+	$(LOCAL_BIN)/goose -dir $(LOCAL_MIGRATION_DIR) postgres $(LOCAL_MIGRATION_DSN) reset -v
 gen-openapi:
 	oapi-codegen -config openapi/.openapi -include-tags tasks -package tasks openapi/openapi.yaml > ./internal/web/tasks/api.gen.go
 run-server:

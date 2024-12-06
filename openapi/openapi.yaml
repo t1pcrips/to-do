@@ -69,6 +69,76 @@ paths:
       responses:
         '204':
           description: The task was successfully deleted
+
+  /user:
+    post:
+      summary: Create a new user
+      tags:
+        - users
+      requestBody:
+        description: The user to create
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: The created user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+
+    get:
+      summary: Get all users
+      tags:
+        - users
+      responses:
+        '200':
+          description: A list of users
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+
+  /users/{id}:
+    parameters:
+      - name: id
+        in: path
+        description: The ID of the user
+        required: true
+        schema:
+          type: integer
+          format: uint
+    patch:
+      summary: Updating an existing user
+      tags:
+        - tasks
+      requestBody:
+        description: The user to update
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: The updated user
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+    delete:
+      summary: Deleting an existing user by Id
+      tags:
+        - tasks
+      responses:
+        '204':
+          description: The user was successfully deleted
+
 components:
   schemas:
     Task:
@@ -76,8 +146,22 @@ components:
       properties:
         id:
           type: integer
-          format: uint
+          format: int64
+        user_id:
+          type: integer
+          format: int64
         title:
           type: string
         is_done:
           type: boolean
+
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+          format: int64
+        email:
+          type: string
+        password:
+          type: string
