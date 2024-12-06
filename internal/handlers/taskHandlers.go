@@ -3,7 +3,7 @@ package handlers
 import (
 	"context"
 	"todo/internal/service/task"
-	"todo/internal/web/tasks"
+	"todo/internal/web/api"
 )
 
 type TaskHandler struct {
@@ -16,16 +16,16 @@ func NewTaskHandler(service *task.TaskService) *TaskHandler {
 	}
 }
 
-func (handler *TaskHandler) GetTasks(ctx context.Context, request tasks.GetTasksRequestObject) (tasks.GetTasksResponseObject, error) {
+func (handler *TaskHandler) GetTasks(ctx context.Context, request api.GetTasksRequestObject) (api.GetTasksResponseObject, error) {
 	allTasks, err := handler.Service.GetAllTask()
 	if err != nil {
 		return nil, err
 	}
 
-	response := tasks.GetTasks200JSONResponse{}
+	response := api.GetTasks200JSONResponse{}
 
 	for _, tas := range allTasks {
-		newTask := tasks.Task{
+		newTask := api.Task{
 			Id:     tas.Id,
 			Title:  tas.Title,
 			IsDone: tas.IsDone,
@@ -36,10 +36,10 @@ func (handler *TaskHandler) GetTasks(ctx context.Context, request tasks.GetTasks
 	return response, nil
 }
 
-func (handler *TaskHandler) PostTasks(ctx context.Context, request tasks.PostTasksRequestObject) (tasks.PostTasksResponseObject, error) {
+func (handler *TaskHandler) PostTasks(ctx context.Context, request api.PostTasksRequestObject) (api.PostTasksResponseObject, error) {
 	taskRequest := request.Body
 
-	taskToCreate := &tasks.Task{
+	taskToCreate := &api.Task{
 		Title:  taskRequest.Title,
 		IsDone: taskRequest.IsDone,
 	}
@@ -48,7 +48,7 @@ func (handler *TaskHandler) PostTasks(ctx context.Context, request tasks.PostTas
 		return nil, err
 	}
 
-	response := tasks.PostTasks201JSONResponse{
+	response := api.PostTasks201JSONResponse{
 		Id:     createdTask.Id,
 		Title:  createdTask.Title,
 		IsDone: createdTask.IsDone,
@@ -57,11 +57,11 @@ func (handler *TaskHandler) PostTasks(ctx context.Context, request tasks.PostTas
 	return response, nil
 }
 
-func (handler *TaskHandler) PatchTasksId(ctx context.Context, request tasks.PatchTasksIdRequestObject) (tasks.PatchTasksIdResponseObject, error) {
+func (handler *TaskHandler) PatchTasksId(ctx context.Context, request api.PatchTasksIdRequestObject) (api.PatchTasksIdResponseObject, error) {
 	taskRequest := request.Body
 	id := request.Id
 
-	updatedTask, err := handler.Service.UpdateTaskById(id, &tasks.Task{
+	updatedTask, err := handler.Service.UpdateTaskById(id, &api.Task{
 		Title:  taskRequest.Title,
 		IsDone: taskRequest.IsDone,
 	})
@@ -69,7 +69,7 @@ func (handler *TaskHandler) PatchTasksId(ctx context.Context, request tasks.Patc
 		return nil, err
 	}
 
-	response := tasks.PatchTasksId201JSONResponse{
+	response := api.PatchTasksId201JSONResponse{
 		Id:     updatedTask.Id,
 		Title:  updatedTask.Title,
 		IsDone: updatedTask.IsDone,
@@ -77,7 +77,7 @@ func (handler *TaskHandler) PatchTasksId(ctx context.Context, request tasks.Patc
 	return response, nil
 }
 
-func (handler *TaskHandler) DeleteTasksId(ctx context.Context, request tasks.DeleteTasksIdRequestObject) (tasks.DeleteTasksIdResponseObject, error) {
+func (handler *TaskHandler) DeleteTasksId(ctx context.Context, request api.DeleteTasksIdRequestObject) (api.DeleteTasksIdResponseObject, error) {
 	id := request.Id
 
 	err := handler.Service.DeleteTaskById(id)
@@ -85,7 +85,7 @@ func (handler *TaskHandler) DeleteTasksId(ctx context.Context, request tasks.Del
 		return nil, err
 	}
 
-	response := tasks.DeleteTasksId204Response{}
+	response := api.DeleteTasksId204Response{}
 
 	return response, err
 }

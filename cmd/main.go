@@ -8,7 +8,7 @@ import (
 	"todo/internal/database"
 	"todo/internal/handlers"
 	"todo/internal/service/task"
-	"todo/internal/web/tasks"
+	"todo/internal/web/api"
 )
 
 func main() {
@@ -26,8 +26,8 @@ func main() {
 	e.Use(middleware.Logger())
 	e.Use(middleware.Recover())
 
-	strictHandler := tasks.NewStrictHandler(handler, nil)
-	tasks.RegisterHandlers(e, strictHandler)
+	strictHandler := api.NewStrictHandler(handler, nil)
+	api.RegisterHandlers(e, strictHandler)
 
 	log.Fatal(e.Start(conf.Path.Port))
 

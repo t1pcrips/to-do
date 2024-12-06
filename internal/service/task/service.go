@@ -1,7 +1,7 @@
 package task
 
 import (
-	"todo/internal/web/tasks"
+	"todo/internal/web/api"
 )
 
 type TaskService struct {
@@ -12,11 +12,11 @@ func NewTaskService(repo *TaskRepository) *TaskService {
 	return &TaskService{Repository: repo}
 }
 
-func (s *TaskService) GetAllTask() ([]tasks.Task, error) {
+func (s *TaskService) GetAllTask() ([]api.Task, error) {
 	return s.Repository.GetAllTasks()
 }
 
-func (s *TaskService) CreateTask(task *tasks.Task) (*tasks.Task, error) {
+func (s *TaskService) CreateTask(task *api.Task) (*api.Task, error) {
 	return s.Repository.CreateTask(task)
 }
 
@@ -28,12 +28,12 @@ func (s *TaskService) DeleteTaskById(id uint) error {
 	return s.Repository.DeleteTask(id)
 }
 
-func (s *TaskService) UpdateTaskById(id uint, task *tasks.Task) (*tasks.Task, error) {
+func (s *TaskService) UpdateTaskById(id uint, task *api.Task) (*api.Task, error) {
 	_, err := s.Repository.FindByIdTask(id)
 	if err != nil {
 		return nil, err
 	}
-	newTask := &tasks.Task{
+	newTask := &api.Task{
 		Id:     &id,
 		Title:  task.Title,
 		IsDone: task.IsDone,
