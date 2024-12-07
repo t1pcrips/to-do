@@ -1,19 +1,25 @@
 package database
 
 import (
-	"gorm.io/driver/postgres"
-	"gorm.io/gorm"
-	"todo/configs"
+	"context"
+	"github.com/jackc/pgx/v5/pgxpool"
+	"todo/internal/configs"
 )
 
 type Db struct {
-	*gorm.DB
+	Pool *pgxpool.Pool
 }
 
-func NewDB(conf *configs.Config) *Db {
-	db, err := gorm.Open(postgres.Open(conf.Db.Dsn), &gorm.Config{})
+func NewDB(ctx context.Context, conf *configs.Config) *Db {
+	cfg, err := pgxpool.ParseConfig(conf.Db.Dsn)
 	if err != nil {
-		panic(err)
+		return nil
 	}
-	return &Db{db}
+
+	pool, err := pgxpool.NewWithConfig(ctx, cfg)
+	if err != nil {
+		return nil
+	}
+
+	return &Db{Pool: pool}
 }

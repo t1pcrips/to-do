@@ -23,7 +23,8 @@ migrate-reset:
 	$(LOCAL_BIN)/goose -dir $(LOCAL_MIGRATION_DIR) postgres $(LOCAL_MIGRATION_DSN) reset -v
 
 gen-openapi:
-	oapi-codegen -config openapi/.openapi -include-tags api -package api openapi/openapi.yaml > ./internal/web/api/api.gen.go
+	oapi-codegen -config openapi/.openapi -include-tags tasks -package api openapi/openapi.yaml > ./internal/web/tasks/tasks.gen.go
+	oapi-codegen -config openapi/.openapi -include-tags users -package api openapi/openapi.yaml > ./internal/web/users/users.gen.go
 
 run-server:
 	go run cmd/main.go

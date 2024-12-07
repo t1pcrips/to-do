@@ -12,8 +12,7 @@ type Config struct {
 }
 
 type DbConfig struct {
-	Dsn  string
-	Port string
+	Dsn string
 }
 
 type PathConfig struct {
@@ -28,8 +27,7 @@ func LoadConfig() *Config {
 	}
 	return &Config{
 		Db: DbConfig{
-			Dsn:  os.Getenv("DSN"),
-			Port: os.Getenv("POSTGRES_PORT"),
+			Dsn: os.Getenv("DSN"),
 		}, Path: PathConfig{
 			Url:  os.Getenv("APP_PATH"),
 			Port: os.Getenv("APP_PORT"),

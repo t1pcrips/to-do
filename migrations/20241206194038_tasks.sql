@@ -5,8 +5,7 @@ create table tasks (
                        title VARCHAR(255) not null,
                        is_done boolean default false,
                        created_at timestamp not null default now(),
-                       updated_at timestamp not null default now(),
-                       deleted_at timestamp default null
+                       updated_at timestamp default null
 );
 -- +goose StatementEnd
 
